@@ -304,14 +304,9 @@
     </main>
 
     <script>
-      const API_KEY = "9ba0f61e41857f5eeaf2bdabd6e82062";
       const API = {
         byCity: (q, units) =>
-          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-            q
-          )}&appid=${API_KEY}&units=${units}`,
-        byCoords: (lat, lon, units) =>
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`,
+          `/api/weather?city=${encodeURIComponent(q)}&units=${units}`,
       };
 
       const form = document.getElementById("searchForm");
