@@ -71,6 +71,7 @@
   const stored = localStorage.getItem(KEY);
   if (stored === "light" || stored === "dark")
     root.setAttribute("data-theme", stored);
+
   const btn = document.getElementById("themeToggle");
   if (!btn) return;
   btn.addEventListener("click", () => {
@@ -93,7 +94,6 @@
     x0 = null,
     locked = false;
 
-  // build dots
   slides.forEach((_, i) => {
     const b = document.createElement("button");
     b.className = "dot";
@@ -113,7 +113,6 @@
 
   function go(i, user) {
     index = (i + slides.length) % slides.length;
-    // ✅ compute gap from CSS instead of hardcoding 16
     const style = getComputedStyle(track);
     const gap = parseFloat(style.gap) || 0;
     const slideWidth = slides[0].getBoundingClientRect().width;
@@ -141,7 +140,6 @@
   track.addEventListener("mouseleave", () => pause(false));
   document.addEventListener("visibilitychange", () => pause(document.hidden));
 
-  // Touch gestures (vertical pan only; CSS touch-action handles most)
   track.addEventListener(
     "touchstart",
     (e) => {
@@ -151,6 +149,7 @@
     },
     { passive: true }
   );
+
   track.addEventListener(
     "touchmove",
     (e) => {
@@ -174,7 +173,7 @@
   go(0, true);
 })();
 
-/* Tilt cards (subtle 3D) */
+/* Tilt cards */
 (() => {
   const cards = document.querySelectorAll(".card");
   const max = 10;

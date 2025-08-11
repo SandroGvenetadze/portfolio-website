@@ -9,10 +9,10 @@
 }
 :root[data-theme="light"] {
   --bg: #ffffff;
-  --fg: #111;
+  --fg: #111111;
   --muted: #525252;
   --accent: #3b5bff;
-  --card: #fff;
+  --card: #ffffff;
   --card-br: #e5e7eb;
 }
 
@@ -22,11 +22,6 @@
 html,
 body {
   margin: 0;
-}
-
-/* ✅ Global overflow lock + media max-width */
-html,
-body {
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -67,6 +62,7 @@ header {
   gap: 16px;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .nav nav {
   display: flex;
@@ -101,7 +97,13 @@ header {
 .actions {
   display: flex;
   gap: 8px;
+  margin-left: auto;
+  align-items: center;
 }
+#themeToggle {
+  font-size: 18px;
+  line-height: 1;
+} /* 🌓 უკეთ ჩანან მობილურზე */
 .btn {
   display: inline-block;
   padding: 12px 18px;
@@ -112,6 +114,7 @@ header {
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s, color 0.15s,
     border-color 0.15s;
   border: 1px solid transparent;
+  cursor: pointer;
 }
 .btn:hover {
   transform: translateY(-1px);
@@ -122,7 +125,6 @@ header {
   color: var(--fg);
   border: 1px solid rgba(255, 255, 255, 0.14);
 }
-/* outline style for secondary CTA */
 .btn.outline {
   background: transparent;
   color: var(--accent);
@@ -173,6 +175,7 @@ header {
   inset: 0;
   z-index: 0;
   opacity: 0.45;
+  pointer-events: none;
 }
 .hero-overlay {
   position: relative;
@@ -269,20 +272,26 @@ header {
 /* Slider */
 .slider {
   position: relative;
-  overflow: hidden; /* fallback for Safari if overflow:clip unsupported */
-  overflow: clip; /* stricter clipping to prevent bleed */
+  overflow: hidden; /* Safari fallback */
+  overflow: clip; /* strict clip */
   border-radius: 14px;
-  touch-action: pan-y; /* ✅ disable horizontal panning on the container */
+  touch-action: pan-y; /* disable horizontal page pan */
+  padding-inline: 8px; /* breathing space on mobile to avoid cut-offs */
 }
 .track {
   display: flex;
   gap: 16px;
   will-change: transform;
-  min-width: 0; /* ✅ guard against overflow */
-  touch-action: pan-y; /* ✅ swipe vertical only inside track */
+  min-width: 0;
+  touch-action: pan-y;
 }
 .slide {
   min-width: 100%;
+}
+@media (max-width: 560px) {
+  .slide {
+    min-width: calc(100% - 20px);
+  } /* compensate gap+padding */
 }
 @media (min-width: 700px) {
   .slide {
@@ -302,10 +311,12 @@ header {
   border-radius: 14px;
   background: var(--card);
   transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
-  height: 160px;
+  height: auto;
+  min-height: 160px;
   transform-style: preserve-3d;
   will-change: transform;
-  min-width: 0; /* ✅ */
+  min-width: 0;
+  word-break: break-word;
 }
 .card:hover,
 .card:focus-within {
@@ -345,7 +356,7 @@ header {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  min-width: 0; /* ✅ */
+  min-width: 0;
 }
 .glass {
   position: relative;
@@ -366,7 +377,7 @@ header {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  min-width: 0; /* ✅ */
+  min-width: 0;
 }
 .skill {
   padding: 12px 14px;
@@ -378,7 +389,7 @@ header {
   border-color: #e5e7eb;
 }
 
-/* Profile links (LinkedIn / GitHub) */
+/* Profile links */
 .profile-links {
   display: flex;
   flex-wrap: wrap;
@@ -450,7 +461,25 @@ textarea:focus {
   color: var(--muted);
 }
 
-/* Responsive */
+/* Responsive header tidy */
+@media (max-width: 640px) {
+  .nav nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  .actions {
+    order: 2;
+  }
+  .logo {
+    order: 1;
+  }
+  .nav a {
+    padding: 8px;
+  }
+}
+
+/* Responsive grids */
 @media (max-width: 980px) {
   .about {
     grid-template-columns: 1fr;
@@ -468,17 +497,7 @@ textarea:focus {
   }
 }
 
-/* ==== Light theme polish (overrides) ==== */
-:root[data-theme="light"] {
-  --bg: #ffffff;
-  --fg: #111111;
-  --muted: #525252;
-  --accent: #3b5bff;
-  --card: #ffffff;
-  --card-br: #e5e7eb;
-}
-
-/* Body background  */
+/* ==== Light theme extras ==== */
 :root[data-theme="light"] body {
   background: radial-gradient(
       1200px 800px at 80% -10%,
@@ -492,8 +511,6 @@ textarea:focus {
     ),
     #ffffff;
 }
-
-/* Hero  */
 :root[data-theme="light"] .hero {
   background: conic-gradient(
     from 0deg at 50% 50%,
@@ -516,8 +533,6 @@ textarea:focus {
       transparent 60%
     );
 }
-
-/* Cards / Glass */
 :root[data-theme="light"] .card {
   background: #fff;
   border-color: #e5e7eb;
@@ -526,8 +541,6 @@ textarea:focus {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
   border-color: #e5e7eb;
 }
-
-/* Inputs */
 :root[data-theme="light"] input,
 :root[data-theme="light"] textarea {
   background: #ffffff;
@@ -538,19 +551,13 @@ textarea:focus {
 :root[data-theme="light"] textarea:focus {
   box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.25);
 }
-
-/* Nav hover */
 :root[data-theme="light"] .nav a:hover {
   background: #f3f4f6;
 }
-
-/* Footer divider */
 :root[data-theme="light"] .footer {
   border-top: 1px solid #e5e7eb;
   color: #6b7280;
 }
-
-/* Avatar border */
 :root[data-theme="light"] .avatar-wrap img {
   border-color: rgba(0, 0, 0, 0.06);
 }
@@ -558,7 +565,6 @@ textarea:focus {
 .hidden {
   display: none;
 }
-
 .contact-email {
   padding: 20px;
   text-align: center;
@@ -576,7 +582,7 @@ textarea:focus {
   text-shadow: 0 2px 12px rgba(91, 124, 250, 0.35);
 }
 
-/* ✅ Extra guards for overflow in complex layouts */
+/* Extra guards */
 .container,
 .about,
 .skills,
