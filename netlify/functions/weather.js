@@ -1,24 +1,52 @@
-export async function handler(event, context) {
-  const API_KEY = process.env.OPENWEATHER_API_KEY;
-  const { city, units } = event.queryStringParameters;
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "GET,OPTIONS",
+};
 
-  if (!city) {
+export async function handler(event) {
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 204, headers: CORS_HEADERS, body: "" };
+  }
+
+  const API_KEY = process.env.OPENWEATHER_API_KEY;
+  if (!API_KEY) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "City parameter is required" }),
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: "Missing OPENWEATHER_API_KEY" }),
     };
   }
 
-  const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      city
-    )}&units=${units || "metric"}&appid=${API_KEY}`
-  );
+  const url = new URL(event.rawUrl);
+  const q = url.searchParams.get("q");
+  const lat = url.searchParams.get("lat");
+  const lon = url.searchParams.get("lon");
+  const units = url.searchParams.get("units") || "metric";
 
-  const data = await response.json();
+  if (!q && !(lat && lon)) {
+    return {
+      statusCode: 400,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: "Missing query" }),
+    };
+  }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(data),
-  };
+  try {
+    const api = q
+      ? `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+          q
+        )}&appid=${API_KEY}&units=${units}`
+      : `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`;
+
+    const resp = await fetch(api);
+    const body = await resp.text();
+    return { statusCode: resp.status, headers: CORS_HEADERS, body };
+  } catch (e) {
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: "Request failed" }),
+    };
+  }
 }
