@@ -95,7 +95,9 @@ header {
   background: var(--accent);
   color: #fff;
   font-weight: 700;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, color 0.15s,
+    border-color 0.15s;
+  border: 1px solid transparent;
 }
 .btn:hover {
   transform: translateY(-1px);
@@ -105,6 +107,17 @@ header {
   background: transparent;
   color: var(--fg);
   border: 1px solid rgba(255, 255, 255, 0.14);
+}
+/* outline style for secondary CTA */
+.btn.outline {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+}
+.btn.outline:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(91, 124, 250, 0.35);
 }
 :root[data-theme="light"] .nav a:hover {
   background: #f3f4f6;
@@ -343,6 +356,14 @@ header {
   border-color: #e5e7eb;
 }
 
+/* Profile links (LinkedIn / GitHub) */
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 /* Contact */
 .contact form {
   display: grid;
@@ -423,4 +444,112 @@ textarea:focus {
   .skills {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ==== Light theme polish (overrides) ==== */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #525252;
+  --accent: #3b5bff;
+  --card: #ffffff;
+  --card-br: #e5e7eb;
+}
+
+/* Body background  */
+:root[data-theme="light"] body {
+  background: radial-gradient(
+      1200px 800px at 80% -10%,
+      color-mix(in oklab, var(--accent) 10%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      1000px 700px at -10% 10%,
+      color-mix(in oklab, #60a5fa 10%, transparent),
+      transparent
+    ),
+    #ffffff;
+}
+
+/* Hero  */
+:root[data-theme="light"] .hero {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    #f6f7fb,
+    #ffffff 25%,
+    #f6f7fb 50%,
+    #ffffff 75%,
+    #f6f7fb 100%
+  );
+}
+:root[data-theme="light"] .hero::before {
+  background: radial-gradient(
+      600px 400px at 10% 10%,
+      rgba(99, 102, 241, 0.12),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 500px at 90% 20%,
+      rgba(34, 211, 238, 0.1),
+      transparent 60%
+    );
+}
+
+/* Cards / Glass */
+:root[data-theme="light"] .card {
+  background: #fff;
+  border-color: #e5e7eb;
+}
+:root[data-theme="light"] .glass {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
+  border-color: #e5e7eb;
+}
+
+/* Inputs */
+:root[data-theme="light"] input,
+:root[data-theme="light"] textarea {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #e5e7eb;
+}
+:root[data-theme="light"] input:focus,
+:root[data-theme="light"] textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.25);
+}
+
+/* Nav hover */
+:root[data-theme="light"] .nav a:hover {
+  background: #f3f4f6;
+}
+
+/* Footer divider */
+:root[data-theme="light"] .footer {
+  border-top: 1px solid #e5e7eb;
+  color: #6b7280;
+}
+
+/* Avatar border */
+:root[data-theme="light"] .avatar-wrap img {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+.hidden {
+  display: none;
+}
+.contact-email {
+  padding: 20px;
+  text-align: center;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.contact-email a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.contact-email a:hover {
+  color: color-mix(in oklab, var(--accent) 85%, white);
+  text-shadow: 0 2px 12px rgba(91, 124, 250, 0.35);
 }

@@ -1,0 +1,361 @@
+:root {
+  --bg-dark: #0b1220;
+  --card-dark: #0f172a;
+  --muted-dark: #94a3b8;
+  --text-dark: #e2e8f0;
+  --accent: #60a5fa;
+  --accent-2: #22d3ee;
+  --danger: #fda4af;
+  --ring: rgba(96, 165, 250, 0.45);
+  --shadow: 0 10px 30px rgba(2, 8, 23, 0.45);
+
+  --bg-light: #f6f8fc;
+  --card-light: #ffffff;
+  --muted-light: #4b5563;
+  --text-light: #111827;
+
+  --radius: 18px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-dark);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  transition: var(--transition);
+}
+
+/* Light mode */
+body.light {
+  background: var(--bg-light);
+  color: var(--text-light);
+}
+
+.app {
+  width: min(720px, 100%);
+  background: var(--card-dark);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+body.light .app {
+  background: var(--card-light);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.brand {
+  font-weight: 700;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.unit-toggle {
+  display: inline-flex;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.unit-toggle button {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.unit-toggle button.active {
+  background: rgba(96, 165, 250, 0.16);
+}
+
+.theme-toggle {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  background: rgba(96, 165, 250, 0.16);
+}
+
+.search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 16px;
+}
+
+.search input {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(2, 6, 23, 0.36);
+  color: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+
+body.light .search input {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.search input:focus {
+  box-shadow: 0 0 0 4px var(--ring);
+  border-color: var(--accent);
+}
+
+.search button {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #0b1220;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  transition: transform 0.2s ease;
+}
+
+.search button:hover {
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 18px;
+  display: grid;
+  gap: 18px;
+}
+
+.status {
+  font-size: 14px;
+  color: var(--muted-dark);
+}
+
+body.light .status {
+  color: var(--muted-light);
+}
+
+.result-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  align-items: center;
+  background: rgba(2, 6, 23, 0.32);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+body.light .result-card {
+  background: #fafafa;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.result-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.icon-wrap {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.city {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.temp {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.desc {
+  text-transform: capitalize;
+  color: var(--muted-dark);
+}
+
+body.light .desc {
+  color: var(--muted-light);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.pill {
+  padding: 8px 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted-dark);
+}
+
+body.light .pill {
+  color: var(--muted-light);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.recent-title {
+  margin: 8px 0 6px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+body.light .recent-title {
+  color: var(--muted-light);
+}
+
+.recents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recents .chip {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(96, 165, 250, 0.14);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.footer {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted-dark);
+}
+
+body.light .footer {
+  color: var(--muted-light);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.location-btn {
+  background: transparent;
+  color: inherit;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Toast styles */
+.toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toast {
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: white;
+  animation: fadeIn 0.3s ease;
+}
+
+.toast.success {
+  background: #22c55e;
+}
+.toast.error {
+  background: #ef4444;
+}
+.toast.info {
+  background: #3b82f6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Shimmer effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.1) 25%,
+    rgba(148, 163, 184, 0.2) 50%,
+    rgba(148, 163, 184, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    background-position: -200% 0;
+  }
+}
