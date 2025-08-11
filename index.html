@@ -2,58 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sandro Gvenetadze — Front-End Developer</title>
-    <link rel="stylesheet" href="./style.css" />
+    <meta
+      name="description"
+      content="Front-End Developer portfolio — responsive, accessible web apps by Sandro Gvenetadze."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <meta
-      name="description"
-      content="Front-End Developer portfolio — responsive, accessible web apps by Sandro Gvenetadze."
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2780%27>🌐</text></svg>"
-    />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <header class="container">
-      <nav class="nav">
-        <a class="logo" href="#">SG</a>
+    <header>
+      <div class="container nav">
+        <a class="logo" href="#" aria-label="Home">
+          <span class="logo-mark">SG</span>
+        </a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
-      </nav>
-      <section class="hero">
-        <h1>
-          <span class="sr-only">Sandro Gvenetadze — </span>Front-End Developer
-        </h1>
-        <p>Building clean, responsive, user-friendly web apps.</p>
-        <a class="btn" href="#projects">See Projects</a>
-      </section>
+      </div>
     </header>
 
-    <main class="container" id="projects">
+    <section class="hero">
+      <canvas class="particles" aria-hidden="true"></canvas>
+      <div class="container hero-overlay">
+        <h1 class="name">Sandro Gvenetadze</h1>
+
+        <div class="avatar-wrap">
+          <img src="assets/sandro.jpg" alt="Sandro Gvenetadze" />
+        </div>
+
+        <p class="tagline">Front-End Web Developer</p>
+        <a class="btn" href="#projects">See Projects</a>
+      </div>
+    </section>
+
+    <main id="projects" class="container">
       <h2>Featured Projects</h2>
-      <div class="grid">
-        <a class="card" href="weather-app.html"
-          ><h3>Weather App</h3>
-          <p>API-driven UI.</p></a
-        >
-        <a class="card" href="movie-app.html"
-          ><h3>Movie App</h3>
-          <p>Search & details.</p></a
-        >
-        <a class="card" href="ui-clone.html"
-          ><h3>UI Clone</h3>
-          <p>Pixel-perfect layout.</p></a
-        >
+
+      <div class="slider" aria-roledescription="carousel">
+        <div class="track" id="track">
+          <a class="slide card" href="weather-app.html">
+            <div class="card-title">Weather App</div>
+            <div class="card-sub">API-driven UI.</div>
+          </a>
+          <a class="slide card" href="movie-app.html">
+            <div class="card-title">Movie App</div>
+            <div class="card-sub">Search & details.</div>
+          </a>
+          <a class="slide card" href="ui-clone.html">
+            <div class="card-title">UI Clone</div>
+            <div class="card-sub">Pixel-perfect layout.</div>
+          </a>
+        </div>
+        <div class="dots" id="dots" aria-label="Carousel pagination"></div>
       </div>
     </main>
-    <footer class="container" id="contact">
+
+    <footer id="contact" class="container footer">
       <h2>Contact</h2>
       <p>
         Email:
@@ -63,12 +73,15 @@
       </p>
       <p>
         GitHub:
-        <a href="https://github.com/SandroGvenetadze" target="_blank"
+        <a
+          href="https://github.com/SandroGvenetadze"
+          target="_blank"
+          rel="noreferrer"
           >SandroGvenetadze</a
         >
       </p>
     </footer>
 
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
   </body>
 </html>
