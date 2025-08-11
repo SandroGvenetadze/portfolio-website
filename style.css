@@ -101,11 +101,10 @@ footer {
   }
 }
 header {
-  position: sticky;
-  top: 0;
-  backdrop-filter: saturate(140%) blur(6px);
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  z-index: 10;
+  position: static;
+  backdrop-filter: none;
+  background: transparent;
+  z-index: auto;
 }
 .nav a {
   padding: 8px 10px;
@@ -180,13 +179,4 @@ header {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-:root {
-  --header-offset: 72px;
-}
-html {
-  scroll-padding-top: var(--header-offset);
-}
-#projects {
-  scroll-margin-top: var(--header-offset);
 }
