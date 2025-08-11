@@ -304,9 +304,18 @@
     </main>
 
     <script>
+      const API_BASE =
+        location.hostname.endsWith("github.io") ||
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1"
+          ? "https://brilliant-blancmange-ef53fb.netlify.app/api"
+          : "/api";
+
       const API = {
         byCity: (q, units) =>
-          `/api/weather?city=${encodeURIComponent(q)}&units=${units}`,
+          `${API_BASE}/weather?q=${encodeURIComponent(q)}&units=${units}`,
+        byCoords: (lat, lon, units) =>
+          `${API_BASE}/weather?lat=${lat}&lon=${lon}&units=${units}`,
       };
 
       const form = document.getElementById("searchForm");
