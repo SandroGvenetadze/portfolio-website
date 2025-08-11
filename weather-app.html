@@ -6,7 +6,7 @@
     <title>Weather — Portfolio</title>
     <meta
       name="description"
-      content="Simple weather search using OpenWeather API (current conditions)"
+      content="Weather search using OpenWeather (current conditions)"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,6 @@
         --accent: #60a5fa;
         --accent-2: #22d3ee;
         --danger: #fda4af;
-        --ok: #86efac;
         --ring: rgba(96, 165, 250, 0.45);
         --shadow: 0 10px 30px rgba(2, 8, 23, 0.45);
         --radius: 18px;
@@ -38,8 +37,7 @@
       body {
         margin: 0;
         font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-          Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji",
-          "Segoe UI Emoji";
+          Cantarell, Noto Sans, Helvetica, Arial;
         background: radial-gradient(
             1200px 800px at 10% -10%,
             rgba(34, 211, 238, 0.15),
@@ -224,19 +222,7 @@
   <body>
     <main class="app" id="app">
       <div class="topbar">
-        <div class="brand">
-          ☁️ <span>Weather</span> Now
-          <small
-            id="demoBadge"
-            style="
-              font-weight: 700;
-              color: var(--accent-2);
-              margin-left: 8px;
-              display: none;
-            "
-            >DEMO</small
-          >
-        </div>
+        <div class="brand">☁️ <span>Weather</span> Now</div>
         <div class="unit-toggle" role="group" aria-label="Unit toggle">
           <button id="cBtn" class="active" data-unit="metric">°C</button>
           <button id="fBtn" data-unit="imperial">°F</button>
@@ -328,68 +314,6 @@
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`,
       };
 
-      const DEMO = API_KEY === "DEMO";
-      const DEMO_DATA = {
-        Tbilisi: {
-          coord: { lon: 44.8337, lat: 41.6941 },
-          weather: [
-            {
-              id: 801,
-              main: "Clouds",
-              description: "scattered clouds",
-              icon: "03d",
-            },
-          ],
-          main: { temp: 19.6, feels_like: 19.1, pressure: 1016, humidity: 52 },
-          wind: { speed: 3.2 },
-          sys: { country: "GE" },
-          name: "Tbilisi",
-        },
-        London: {
-          coord: { lon: -0.1257, lat: 51.5085 },
-          weather: [
-            { id: 500, main: "Rain", description: "light rain", icon: "10d" },
-          ],
-          main: { temp: 14.2, feels_like: 13.8, pressure: 1012, humidity: 81 },
-          wind: { speed: 4.7 },
-          sys: { country: "GB" },
-          name: "London",
-        },
-        "New York": {
-          coord: { lon: -74.006, lat: 40.7143 },
-          weather: [
-            { id: 800, main: "Clear", description: "clear sky", icon: "01d" },
-          ],
-          main: { temp: 23.1, feels_like: 23.1, pressure: 1018, humidity: 45 },
-          wind: { speed: 2.9 },
-          sys: { country: "US" },
-          name: "New York",
-        },
-      };
-      function getDemoData(queryOrCoords) {
-        let city =
-          typeof queryOrCoords === "string" ? queryOrCoords.trim() : "";
-        if (!city && queryOrCoords && typeof queryOrCoords === "object")
-          city = "Tbilisi";
-        const key = Object.keys(DEMO_DATA).find(
-          (k) => k.toLowerCase() === city.toLowerCase()
-        );
-        if (key) return DEMO_DATA[key];
-        const base = DEMO_DATA.Tbilisi;
-        const t = 15 + Math.random() * 12;
-        return {
-          ...base,
-          main: {
-            ...base.main,
-            temp: t,
-            feels_like: t - 0.6 + Math.random() * 1.2,
-            humidity: 40 + Math.round(Math.random() * 40),
-          },
-          wind: { speed: 1.5 + Math.random() * 4 },
-          name: city || "Tbilisi",
-        };
-      }
-
       const form = document.getElementById("searchForm");
       const input = document.getElementById("cityInput");
       const statusEl = document.getElementById("status");
@@ -434,11 +358,11 @@
           tone === "error" ? "var(--danger)" : "var(--muted)";
       }
 
-      function saveRecent(city) {
+      function saveRecent(cityName) {
         const list = STATE.recents.filter(
-          (c) => c.toLowerCase() !== city.toLowerCase()
+          (c) => c.toLowerCase() !== cityName.toLowerCase()
         );
-        list.unshift(city);
+        list.unshift(cityName);
         STATE.recents = list.slice(0, 8);
         localStorage.setItem("recentCities", JSON.stringify(STATE.recents));
         renderRecents();
@@ -477,19 +401,6 @@
         try {
           setStatus("Loading…");
           card.hidden = true;
-          if (DEMO) {
-            await new Promise((r) => setTimeout(r, 400));
-            const data = getDemoData(queryOrCoords);
-            renderWeather(data);
-            const qName = data?.name;
-            if (qName) {
-              STATE.lastQuery = qName;
-              localStorage.setItem("lastQuery", qName);
-              saveRecent(qName);
-            }
-            setStatus("Demo data");
-            return;
-          }
           let url;
           if (typeof queryOrCoords === "string") {
             const q = queryOrCoords.trim();
@@ -518,7 +429,6 @@
             setStatus("Updated");
           }
         } catch (err) {
-          console.error(err);
           setStatus(`Error: ${err.message}`, "error");
         }
       }
@@ -546,10 +456,6 @@
         );
       });
 
-      if (DEMO) {
-        document.getElementById("demoBadge").style.display = "inline";
-        setStatus("Demo mode is ON. Replace API_KEY to use the live API.");
-      }
       cBtn.classList.toggle("active", STATE.units === "metric");
       fBtn.classList.toggle("active", STATE.units === "imperial");
       renderRecents();
