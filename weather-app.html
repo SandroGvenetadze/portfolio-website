@@ -2,29 +2,562 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Weather App — Sandro Gvenetadze</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weather — Portfolio</title>
+    <meta
+      name="description"
+      content="Simple weather search using OpenWeather API (current conditions)"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0b1220;
+        --card: #0f172a;
+        --muted: #94a3b8;
+        --text: #e2e8f0;
+        --accent: #60a5fa;
+        --accent-2: #22d3ee;
+        --danger: #fda4af;
+        --ok: #86efac;
+        --ring: rgba(96, 165, 250, 0.45);
+        --shadow: 0 10px 30px rgba(2, 8, 23, 0.45);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: radial-gradient(
+            1200px 800px at 10% -10%,
+            rgba(34, 211, 238, 0.15),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 110% 10%,
+            rgba(96, 165, 250, 0.18),
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .app {
+        width: min(720px, 100%);
+        background: linear-gradient(
+          180deg,
+          rgba(15, 23, 42, 0.92),
+          rgba(15, 23, 42, 0.75)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px;
+        gap: 12px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+        backdrop-filter: blur(6px);
+      }
+      .brand {
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .brand span {
+        color: var(--accent);
+      }
+      .unit-toggle {
+        display: inline-flex;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .unit-toggle button {
+        background: transparent;
+        color: var(--text);
+        border: 0;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .unit-toggle button.active {
+        background: rgba(96, 165, 250, 0.16);
+      }
+      .search {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        padding: 16px;
+        border-bottom: 1px dashed rgba(148, 163, 184, 0.16);
+      }
+      .search input[type="text"] {
+        width: 100%;
+        padding: 14px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        background: rgba(2, 6, 23, 0.36);
+        color: var(--text);
+        outline: none;
+      }
+      .search input[type="text"]:focus {
+        box-shadow: 0 0 0 4px var(--ring);
+        border-color: var(--accent);
+      }
+      .search button {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        cursor: pointer;
+        font-weight: 700;
+        color: #0b1220;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+      .content {
+        padding: 18px;
+        display: grid;
+        gap: 18px;
+      }
+      .status {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .result-card {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 18px;
+        align-items: center;
+        background: rgba(2, 6, 23, 0.32);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        border-radius: 16px;
+        padding: 16px;
+      }
+      .result-card img {
+        width: 100px;
+        height: 100px;
+      }
+      .city {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+      .temp {
+        font-size: 48px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .desc {
+        text-transform: capitalize;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .pill {
+        padding: 8px 10px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .recents {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(96, 165, 250, 0.14);
+        border: 1px solid rgba(96, 165, 250, 0.25);
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .footer {
+        padding: 14px 18px;
+        border-top: 1px solid rgba(148, 163, 184, 0.12);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      @media (max-width: 540px) {
+        .result-card {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .result-card img {
+          margin: 0 auto;
+        }
+        .temp {
+          font-size: 42px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <header class="container">
-      <nav class="nav">
-        <a class="logo" href="index.html">SG</a>
-        <a href="index.html#projects">Projects</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
-    </header>
+    <main class="app" id="app">
+      <div class="topbar">
+        <div class="brand">
+          ☁️ <span>Weather</span> Now
+          <small
+            id="demoBadge"
+            style="
+              font-weight: 700;
+              color: var(--accent-2);
+              margin-left: 8px;
+              display: none;
+            "
+            >DEMO</small
+          >
+        </div>
+        <div class="unit-toggle" role="group" aria-label="Unit toggle">
+          <button id="cBtn" class="active" data-unit="metric">°C</button>
+          <button id="fBtn" data-unit="imperial">°F</button>
+        </div>
+      </div>
 
-    <main class="container">
-      <h1>Weather App</h1>
-      <p>API-driven weather app (demo coming soon).</p>
-      <p>
-        <a
-          href="https://github.com/SandroGvenetadze/weather-app"
-          target="_blank"
-          >→ View GitHub repo</a
-        >
-      </p>
+      <form class="search" id="searchForm" autocomplete="off">
+        <input
+          id="cityInput"
+          type="text"
+          placeholder="Search city (e.g., Tbilisi, London, Tokyo)"
+          aria-label="City name"
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <section class="content">
+        <div class="status" id="status">Type a city and hit Search.</div>
+
+        <article class="result-card" id="card" hidden>
+          <img id="icon" alt="Weather icon" src="" loading="lazy" />
+          <div>
+            <div class="city" id="city">—</div>
+            <div class="desc" id="desc">—</div>
+            <div class="temp" id="temp">—</div>
+            <div class="meta">
+              <span class="pill" id="feels">Feels like —</span>
+              <span class="pill" id="humidity">Humidity —</span>
+              <span class="pill" id="wind">Wind —</span>
+              <span class="pill" id="pressure">Pressure —</span>
+            </div>
+          </div>
+        </article>
+
+        <div>
+          <h4
+            style="
+              margin: 8px 0 6px 0;
+              color: var(--muted);
+              font-weight: 700;
+              font-size: 13px;
+              letter-spacing: 0.4px;
+              text-transform: uppercase;
+            "
+          >
+            Recent
+          </h4>
+          <div class="recents" id="recents"></div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <div>
+          <button
+            id="locBtn"
+            style="
+              background: transparent;
+              color: var(--text);
+              border: 1px solid rgba(148, 163, 184, 0.25);
+              padding: 8px 12px;
+              border-radius: 10px;
+              cursor: pointer;
+            "
+          >
+            Use my location
+          </button>
+        </div>
+        <div>
+          Data by
+          <a
+            href="https://openweathermap.org/"
+            target="_blank"
+            rel="noreferrer noopener"
+            >OpenWeather</a
+          >
+        </div>
+      </div>
     </main>
+
+    <script>
+      const API_KEY = "9ba0f61e41857f5eeaf2bdabd6e82062";
+      const API = {
+        byCity: (q, units) =>
+          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+            q
+          )}&appid=${API_KEY}&units=${units}`,
+        byCoords: (lat, lon, units) =>
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`,
+      };
+
+      const DEMO = API_KEY === "DEMO";
+      const DEMO_DATA = {
+        Tbilisi: {
+          coord: { lon: 44.8337, lat: 41.6941 },
+          weather: [
+            {
+              id: 801,
+              main: "Clouds",
+              description: "scattered clouds",
+              icon: "03d",
+            },
+          ],
+          main: { temp: 19.6, feels_like: 19.1, pressure: 1016, humidity: 52 },
+          wind: { speed: 3.2 },
+          sys: { country: "GE" },
+          name: "Tbilisi",
+        },
+        London: {
+          coord: { lon: -0.1257, lat: 51.5085 },
+          weather: [
+            { id: 500, main: "Rain", description: "light rain", icon: "10d" },
+          ],
+          main: { temp: 14.2, feels_like: 13.8, pressure: 1012, humidity: 81 },
+          wind: { speed: 4.7 },
+          sys: { country: "GB" },
+          name: "London",
+        },
+        "New York": {
+          coord: { lon: -74.006, lat: 40.7143 },
+          weather: [
+            { id: 800, main: "Clear", description: "clear sky", icon: "01d" },
+          ],
+          main: { temp: 23.1, feels_like: 23.1, pressure: 1018, humidity: 45 },
+          wind: { speed: 2.9 },
+          sys: { country: "US" },
+          name: "New York",
+        },
+      };
+      function getDemoData(queryOrCoords) {
+        let city =
+          typeof queryOrCoords === "string" ? queryOrCoords.trim() : "";
+        if (!city && queryOrCoords && typeof queryOrCoords === "object")
+          city = "Tbilisi";
+        const key = Object.keys(DEMO_DATA).find(
+          (k) => k.toLowerCase() === city.toLowerCase()
+        );
+        if (key) return DEMO_DATA[key];
+        const base = DEMO_DATA.Tbilisi;
+        const t = 15 + Math.random() * 12;
+        return {
+          ...base,
+          main: {
+            ...base.main,
+            temp: t,
+            feels_like: t - 0.6 + Math.random() * 1.2,
+            humidity: 40 + Math.round(Math.random() * 40),
+          },
+          wind: { speed: 1.5 + Math.random() * 4 },
+          name: city || "Tbilisi",
+        };
+      }
+
+      const form = document.getElementById("searchForm");
+      const input = document.getElementById("cityInput");
+      const statusEl = document.getElementById("status");
+      const card = document.getElementById("card");
+      const icon = document.getElementById("icon");
+      const city = document.getElementById("city");
+      const desc = document.getElementById("desc");
+      const temp = document.getElementById("temp");
+      const feels = document.getElementById("feels");
+      const humidity = document.getElementById("humidity");
+      const wind = document.getElementById("wind");
+      const pressure = document.getElementById("pressure");
+      const recentsWrap = document.getElementById("recents");
+      const cBtn = document.getElementById("cBtn");
+      const fBtn = document.getElementById("fBtn");
+      const locBtn = document.getElementById("locBtn");
+
+      const STATE = {
+        units: localStorage.getItem("units") || "metric",
+        lastQuery: localStorage.getItem("lastQuery") || "",
+        recents: JSON.parse(localStorage.getItem("recentCities") || "[]"),
+      };
+
+      const fmtTemp = (t) =>
+        `${Math.round(t)}°${STATE.units === "metric" ? "C" : "F"}`;
+      const fmtWind = (v) =>
+        STATE.units === "metric"
+          ? `${v.toFixed(1)} m/s`
+          : `${v.toFixed(1)} mph`;
+
+      function setUnits(unit) {
+        STATE.units = unit;
+        localStorage.setItem("units", unit);
+        cBtn.classList.toggle("active", unit === "metric");
+        fBtn.classList.toggle("active", unit === "imperial");
+        if (STATE.lastQuery) fetchWeather(STATE.lastQuery);
+      }
+
+      function setStatus(msg, tone = "muted") {
+        statusEl.textContent = msg;
+        statusEl.style.color =
+          tone === "error" ? "var(--danger)" : "var(--muted)";
+      }
+
+      function saveRecent(city) {
+        const list = STATE.recents.filter(
+          (c) => c.toLowerCase() !== city.toLowerCase()
+        );
+        list.unshift(city);
+        STATE.recents = list.slice(0, 8);
+        localStorage.setItem("recentCities", JSON.stringify(STATE.recents));
+        renderRecents();
+      }
+
+      function renderRecents() {
+        recentsWrap.innerHTML = "";
+        STATE.recents.forEach((c) => {
+          const el = document.createElement("button");
+          el.className = "chip";
+          el.textContent = c;
+          el.addEventListener("click", () => {
+            input.value = c;
+            fetchWeather(c);
+          });
+          recentsWrap.appendChild(el);
+        });
+      }
+
+      function renderWeather(data) {
+        const { name, sys, weather, main, wind: w } = data;
+        const iconCode = weather?.[0]?.icon || "01d";
+        icon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        icon.alt = weather?.[0]?.description || "Weather icon";
+        city.textContent = `${name}, ${sys?.country || ""}`.trim();
+        desc.textContent = weather?.[0]?.description || "—";
+        temp.textContent = fmtTemp(main.temp);
+        feels.textContent = `Feels like ${fmtTemp(main.feels_like)}`;
+        humidity.textContent = `Humidity ${main.humidity}%`;
+        wind.textContent = `Wind ${fmtWind(w.speed)}`;
+        pressure.textContent = `Pressure ${main.pressure} hPa`;
+        card.hidden = false;
+      }
+
+      async function fetchWeather(queryOrCoords) {
+        try {
+          setStatus("Loading…");
+          card.hidden = true;
+          if (DEMO) {
+            await new Promise((r) => setTimeout(r, 400));
+            const data = getDemoData(queryOrCoords);
+            renderWeather(data);
+            const qName = data?.name;
+            if (qName) {
+              STATE.lastQuery = qName;
+              localStorage.setItem("lastQuery", qName);
+              saveRecent(qName);
+            }
+            setStatus("Demo data");
+            return;
+          }
+          let url;
+          if (typeof queryOrCoords === "string") {
+            const q = queryOrCoords.trim();
+            if (!q) return setStatus("Please type a city first.");
+            url = API.byCity(q, STATE.units);
+          } else {
+            const { lat, lon } = queryOrCoords;
+            url = API.byCoords(lat, lon, STATE.units);
+          }
+          const res = await fetch(url);
+          if (!res.ok) {
+            const problem = await res.json().catch(() => ({}));
+            const message =
+              problem?.message || res.statusText || "Request failed";
+            throw new Error(message);
+          }
+          const data = await res.json();
+          renderWeather(data);
+          const qName = data?.name;
+          if (qName) {
+            STATE.lastQuery = qName;
+            localStorage.setItem("lastQuery", qName);
+            saveRecent(qName);
+            setStatus(`Updated • ${new Date().toLocaleTimeString()}`);
+          } else {
+            setStatus("Updated");
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus(`Error: ${err.message}`, "error");
+        }
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetchWeather(input.value);
+      });
+      cBtn.addEventListener("click", () => setUnits("metric"));
+      fBtn.addEventListener("click", () => setUnits("imperial"));
+      locBtn.addEventListener("click", () => {
+        if (!("geolocation" in navigator))
+          return setStatus(
+            "Geolocation not supported in this browser.",
+            "error"
+          );
+        setStatus("Getting your location…");
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude: lat, longitude: lon } = pos.coords;
+            fetchWeather({ lat, lon });
+          },
+          (err) => setStatus(`Location error: ${err.message}`, "error"),
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+
+      if (DEMO) {
+        document.getElementById("demoBadge").style.display = "inline";
+        setStatus("Demo mode is ON. Replace API_KEY to use the live API.");
+      }
+      cBtn.classList.toggle("active", STATE.units === "metric");
+      fBtn.classList.toggle("active", STATE.units === "imperial");
+      renderRecents();
+      if (STATE.lastQuery) {
+        fetchWeather(STATE.lastQuery);
+      } else {
+        fetchWeather("Tbilisi");
+      }
+    </script>
   </body>
 </html>
