@@ -15,6 +15,7 @@
   --card: #fff;
   --card-br: #e5e7eb;
 }
+
 * {
   box-sizing: border-box;
 }
@@ -22,6 +23,19 @@ html,
 body {
   margin: 0;
 }
+
+/* ✅ Global overflow lock + media max-width */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+img,
+canvas,
+video {
+  max-width: 100%;
+}
+
 body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--fg);
@@ -255,13 +269,17 @@ header {
 /* Slider */
 .slider {
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* fallback for Safari if overflow:clip unsupported */
+  overflow: clip; /* stricter clipping to prevent bleed */
   border-radius: 14px;
+  touch-action: pan-y; /* ✅ disable horizontal panning on the container */
 }
 .track {
   display: flex;
   gap: 16px;
   will-change: transform;
+  min-width: 0; /* ✅ guard against overflow */
+  touch-action: pan-y; /* ✅ swipe vertical only inside track */
 }
 .slide {
   min-width: 100%;
@@ -276,6 +294,7 @@ header {
     min-width: 33.3333%;
   }
 }
+
 .card {
   display: block;
   padding: 18px;
@@ -286,6 +305,7 @@ header {
   height: 160px;
   transform-style: preserve-3d;
   will-change: transform;
+  min-width: 0; /* ✅ */
 }
 .card:hover,
 .card:focus-within {
@@ -325,6 +345,7 @@ header {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  min-width: 0; /* ✅ */
 }
 .glass {
   position: relative;
@@ -345,6 +366,7 @@ header {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  min-width: 0; /* ✅ */
 }
 .skill {
   padding: 12px 14px;
@@ -532,9 +554,11 @@ textarea:focus {
 :root[data-theme="light"] .avatar-wrap img {
   border-color: rgba(0, 0, 0, 0.06);
 }
+
 .hidden {
   display: none;
 }
+
 .contact-email {
   padding: 20px;
   text-align: center;
@@ -542,14 +566,21 @@ textarea:focus {
   font-size: 18px;
   font-weight: 600;
 }
-
 .contact-email a {
   color: var(--accent);
   text-decoration: none;
   transition: color 0.2s, text-shadow 0.2s;
 }
-
 .contact-email a:hover {
   color: color-mix(in oklab, var(--accent) 85%, white);
   text-shadow: 0 2px 12px rgba(91, 124, 250, 0.35);
+}
+
+/* ✅ Extra guards for overflow in complex layouts */
+.container,
+.about,
+.skills,
+.track,
+.card {
+  min-width: 0;
 }

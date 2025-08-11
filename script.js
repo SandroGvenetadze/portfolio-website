@@ -93,6 +93,7 @@
     x0 = null,
     locked = false;
 
+  // build dots
   slides.forEach((_, i) => {
     const b = document.createElement("button");
     b.className = "dot";
@@ -109,27 +110,38 @@
         d.setAttribute("aria-current", i === index ? "true" : "false")
       );
   }
+
   function go(i, user) {
     index = (i + slides.length) % slides.length;
-    const w = slides[0].getBoundingClientRect().width + 16;
+    // ✅ compute gap from CSS instead of hardcoding 16
+    const style = getComputedStyle(track);
+    const gap = parseFloat(style.gap) || 0;
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    const w = slideWidth + gap;
     track.style.transform = `translateX(${-index * w}px)`;
     track.style.transition = user
       ? "transform .45s ease"
       : "transform .6s ease";
     updateDots();
   }
+
   function next() {
     if (!paused) go(index + 1);
   }
+
   let timer = setInterval(next, 4000);
+
   function pause(p) {
     paused = p;
     clearInterval(timer);
     if (!p) timer = setInterval(next, 4000);
   }
+
   track.addEventListener("mouseenter", () => pause(true));
   track.addEventListener("mouseleave", () => pause(false));
   document.addEventListener("visibilitychange", () => pause(document.hidden));
+
+  // Touch gestures (vertical pan only; CSS touch-action handles most)
   track.addEventListener(
     "touchstart",
     (e) => {
@@ -152,10 +164,12 @@
     },
     { passive: true }
   );
+
   addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") go(index + 1, true);
     if (e.key === "ArrowLeft") go(index - 1, true);
   });
+
   updateDots();
   go(0, true);
 })();
