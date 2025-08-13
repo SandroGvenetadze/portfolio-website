@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Cleaned & improved markup for responsiveness and a11y. Minimal content changes. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -9,50 +10,56 @@
       content="Front-End Developer portfolio — responsive, accessible web apps by Sandro Gvenetadze."
     />
     <meta name="theme-color" content="#0b0b0c" />
+
+    <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./style.css?v=10" />
+
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">Skip to main content</a>
 
-    <header>
-      <div class="container nav" data-reveal>
-        <a class="logo" href="#" aria-label="Home"
-          ><span class="logo-mark">SG</span></a
-        >
-        <nav aria-label="Primary">
-          <a href="#projects">Projects</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
-        <div class="actions">
-          <button
-            class="btn ghost"
-            id="themeToggle"
-            aria-label="Toggle color theme"
-          >
-            🌓
-          </button>
-          <a class="btn" href="#contact">Hire me</a>
-        </div>
+    <header class="header container">
+      <div class="brand">
+        <a href="#top" class="logo" aria-label="Go to home">SG</a>
+        <span class="vr" aria-hidden="true"></span>
+        <strong class="role">Front-End Developer</strong>
       </div>
+
+      <nav aria-label="Primary" class="nav">
+        <a href="#projects" class="btn ghost">Projects</a>
+        <a href="#about" class="btn ghost">About</a>
+        <a href="#contact" class="btn ghost">Contact</a>
+
+        <button
+          id="themeToggle"
+          class="btn outline"
+          type="button"
+          aria-label="Toggle theme"
+        >
+          🌓
+        </button>
+      </nav>
     </header>
 
     <section class="hero" data-reveal>
       <canvas class="particles" aria-hidden="true"></canvas>
       <div class="container hero-overlay">
         <h1 class="name" data-reveal>Sandro Gvenetadze</h1>
+
         <div class="avatar-wrap" data-reveal>
           <img src="assets/sandro.png" alt="Sandro Gvenetadze" />
         </div>
+
         <p class="tagline" data-reveal>
           Front-End Web Developer — fast, elegant, user-focused interfaces.
         </p>
+
         <a class="btn magnet" href="#projects" data-reveal
           ><span>See Projects</span></a
         >
@@ -60,6 +67,7 @@
     </section>
 
     <main id="main" class="container">
+      <!-- Projects -->
       <section id="projects" data-reveal>
         <h2 class="section-title">Featured Projects</h2>
         <p class="lead">
@@ -71,66 +79,59 @@
           <div class="track" id="track">
             <a class="slide card" href="weather-app.html">
               <div class="card-title">Weather App</div>
-              <div class="card-sub">OpenWeather + secure serverless proxy.</div>
+              <p class="card-sub">Vanilla JS • Fetch • Netlify Function</p>
             </a>
+
             <a
-              class="card"
+              class="slide card"
               href="https://my-movie-app-nine-mu.vercel.app/"
-              target="_blank"
-              aria-label="Open Movie App"
             >
-              <h3>Movie App</h3>
-              <p>
-                Top 100 movies, Search, Favorites, TMDB API + fallback JSON.
-              </p>
+              <div class="card-title">Movie App</div>
+              <p class="card-sub">Vite + TS + TMDB • Fallback & Cache</p>
             </a>
+
             <a class="slide card" href="ui-clone.html">
-              <div class="card-title">ToDo List</div>
-              <div class="card-sub">Soon</div>
+              <div class="card-title">UI Clone</div>
+              <p class="card-sub">Responsive • Accessibility • Animations</p>
             </a>
           </div>
-          <div class="dots" id="dots" aria-label="Carousel pagination"></div>
+
+          <div
+            class="dots"
+            id="dots"
+            aria-label="Slides navigation"
+            role="tablist"
+          ></div>
         </div>
       </section>
 
-      <section id="about" data-reveal>
+      <!-- About + Skills -->
+      <section id="about" class="about" data-reveal>
         <h2 class="section-title">About</h2>
-        <p class="lead">
-          Front-end developer focused on detail, performance, and UX. Modern
-          CSS, micro-animations, and clean architecture.
-        </p>
-
-        <div class="about">
-          <div class="glass me">
-            <h3 class="h3">Who I Am</h3>
-            <p>
-              I’m a detail-oriented
-              <strong>Front-End Developer</strong> building responsive,
-              accessible, and high-performance web applications. I specialize in
-              <strong>React</strong> and <strong>TypeScript</strong>, combining
-              clean architecture with design-minded UI to ship interfaces that
-              look great and scale well.
+        <div class="about-grid">
+          <div class="glass">
+            <p class="lead">
+              I build responsive, accessible and performant front-end
+              experiences with attention to detail. I care about clean code, DX
+              and UX.
             </p>
-            <p>
-              I care about <strong>scalability</strong>,
-              <strong>maintainability</strong>, and
-              <strong>accessibility</strong> as first-class principles, and I’m
-              comfortable owning features end-to-end—from UI flows to
-              deployment.
-            </p>
-            <ul>
+            <ul class="bullets">
+              <li><strong>Core:</strong> HTML, CSS, JavaScript, TypeScript</li>
+              <li><strong>Frameworks:</strong> React, Next.js</li>
+              <li><strong>UI:</strong> Tailwind, Ant Design</li>
               <li>
-                <strong>Front-End:</strong> React, TypeScript, Next.js, Vite
+                <strong>Tooling:</strong> Vite, ESLint &amp; Prettier,
+                Git/GitHub
               </li>
               <li>
                 <strong>UI/UX:</strong> Responsive design, a11y (WCAG), LCP
                 optimization
               </li>
               <li>
-                <strong>DevOps/Deploy:</strong> GitHub &amp; GitHub Actions,
-                Vercel, Netlify
+                <strong>Dev/Deploy:</strong> GitHub Actions, Vercel, Netlify
               </li>
             </ul>
+
             <div class="profile-links">
               <a
                 class="btn"
@@ -163,12 +164,12 @@
               <div class="skill">Node</div>
               <div class="skill">Git</div>
               <div class="skill">GitHub</div>
-              <div class="skill">Ant Design</div>
-              <div class="skill">Accessibility</div>
-              <div class="skill">SEO</div>
               <div class="skill">Tailwind</div>
               <div class="skill">Vite</div>
               <div class="skill">Figma</div>
+              <div class="skill">Accessibility</div>
+              <div class="skill">Ant Design</div>
+              <div class="skill">SEO</div>
               <div class="skill">Responsive Design</div>
               <div class="skill">Performance Optimization</div>
               <div class="skill">Testing</div>
@@ -179,11 +180,16 @@
         </div>
       </section>
 
+      <!-- Contact -->
       <section id="contact" class="contact" data-reveal>
         <h2 class="section-title">Contact</h2>
         <p class="lead">
           Feel free to reach out to me directly via email
-          SandroGvenetadzeDev@gmail.com
+          <span class="contact-email"
+            ><a href="mailto:sgvenetadze@outlook.com"
+              >SandroGvenetadzeDev@gmail.com</a
+            ></span
+          >
         </p>
       </section>
     </main>
